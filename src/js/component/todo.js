@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Item from "./Item";
 import ListItem from "./ListItem";
 
 export const TodoApp = () => {
 	let [lista, setLista] = useState([]);
+	let [tarea, setTarea] = useState("");
+
+	const minPassword = /^.{6,}$/;
+	const oneLetter = /\w*[a-zA-Z]\w*/;
+
+	useEffect(() => {
+		if (!minPassword.test(tarea)) {
+			console.error("No cumple con largo minimo de 6");
+		}
+		if (!oneLetter.test(tarea)) {
+			console.error("Minimo una letra");
+		}
+	}, [tarea]);
 
 	const addTarea = tarea => {
 		if (tarea.key === "Enter") {
@@ -31,10 +44,12 @@ export const TodoApp = () => {
 					<div className="col-12 col-md-6">
 						<h6 className="text-muted">To Do List</h6>
 						<input
+							id="campito"
 							onKeyDown={addTarea}
 							className="form-control"
 							type="text"
-							placeholder="Add a thing"></input>
+							placeholder="Add a thing"
+							onChange={e => setTarea(e.target.value)}></input>
 						<br />
 						<ListItem list={newList} />
 					</div>
