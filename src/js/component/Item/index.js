@@ -4,7 +4,7 @@ import { PropTypes } from "prop-types";
 const Item = props => {
 	return (
 		<li className="list-group-item" key={props.index}>
-			{props.value}
+			{props.value.label}
 			<button
 				onClick={() => props.onClick(props.index)}
 				className="btn btn-default btn-xs pull-right remove-item">
@@ -15,7 +15,10 @@ const Item = props => {
 };
 
 Item.propTypes = {
-	value: PropTypes.string,
+	value: PropTypes.shape({
+		label: PropTypes.string,
+		done: PropTypes.bool
+	}),
 	index: PropTypes.number,
 	onClick: PropTypes.func
 };

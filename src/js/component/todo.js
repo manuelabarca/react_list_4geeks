@@ -10,6 +10,45 @@ export const TodoApp = () => {
 	const oneLetter = /\w*[a-zA-Z]\w*/;
 
 	useEffect(() => {
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/manulabarca", {
+			method: "POST",
+			body: JSON.stringify([]),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then(resp => {
+				console.log("respuesta", resp);
+
+				fetch(
+					"https://assets.breatheco.de/apis/fake/todos/user/manulabarca",
+					{
+						method: "GET",
+
+						headers: {
+							"Content-Type": "application/json"
+						}
+					}
+				)
+					.then(resp => {
+						console.log("respuesta", resp);
+						return resp.json();
+					})
+					.then(data => {
+						setLista(data);
+					})
+
+					.catch(err => {
+						console.log("error", err);
+					});
+			})
+
+			.catch(err => {
+				console.log("error", err);
+			});
+	}, []);
+
+	useEffect(() => {
 		if (!minPassword.test(tarea)) {
 			console.error("No cumple con largo minimo de 6");
 		}
@@ -27,10 +66,49 @@ export const TodoApp = () => {
 
 	const delTarea = pos => {
 		const tempList = [...lista];
+		console.log("previo borrado", tempList);
 		tempList.splice(pos, 1);
-		setLista(tempList);
-
-		console.log(lista);
+		console.log("Lista temporal", tempList);
+		const methods = ["PUT", "DELETE"];
+		if (tempList.length > 0) {
+			fetch(
+				"https://assets.breatheco.de/apis/fake/todos/user/manulabarca",
+				{
+					method: methods[0],
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(tempList)
+				}
+			)
+				.then(resp => {
+					console.log("Respuesta de borrado", resp);
+					setLista(tempList);
+					console.log(lista);
+				})
+				.catch(error => {
+					console.log("Error delete", error);
+				});
+		} else {
+			fetch(
+				"https://assets.breatheco.de/apis/fake/todos/user/manulabarca",
+				{
+					method: methods[1],
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(tempList)
+				}
+			)
+				.then(resp => {
+					console.log("Respuesta de borrado", resp);
+					setLista(tempList);
+					console.log(lista);
+				})
+				.catch(error => {
+					console.log("Error delete", error);
+				});
+		}
 	};
 
 	const newList = lista.map((value, index) => (
